@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Compress and resize images privately in your browser. Download individual images or a ZIP. Built by Deb Gourab Biswas.">
+  <meta name="theme-color" content="#2563eb">
+  <title>Image Compressor | Deb Gourab Biswas</title>
+  <link rel="stylesheet" href="assets/styles.css">
+  <script defer src="assets/vendor/jszip.min.js"></script>
+  <script defer src="assets/app.js"></script>
+</head>
+<body>
+<header><a class="brand" href="./"><span class="brand-icon">▧</span> Image Compressor</a><a href="https://github.com/debgourab/image_compressor" target="_blank" rel="noopener noreferrer">GitHub ↗</a></header>
+<main>
+  <section class="intro"><span class="eyebrow">SMALLER FILES. MORE POSSIBILITIES.</span><h1>Less size.<br><span>Same big picture.</span></h1><p>Optimize your images in a few clicks.<br>Everything happens right here, in your browser.</p><div class="privacy"><span></span> Private by design · No uploads · No signup</div></section>
+  <section class="workspace" aria-label="Image compression workspace">
+    <div class="dropzone" id="dropzone"><div class="upload-icon" aria-hidden="true">↑</div><h2>Drop your images here</h2><p>or <button class="link" id="browse" type="button">browse files</button> from your device</p><input id="files" type="file" multiple accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/avif,.jpg,.jpeg,.png,.webp,.gif,.bmp,.avif" hidden><div class="tags"><span>JPG</span><span>PNG</span><span>WebP</span><span>GIF</span><span>BMP</span><span>AVIF*</span></div><small>Up to 30 images · 25 MB per file · 100 MB per batch</small></div>
+    <fieldset id="settings"><legend>Make it yours</legend><div class="settings-grid"><label>Output format<select id="format"><option value="image/webp">WebP — compact & transparent</option><option value="image/jpeg">JPEG — white background</option><option value="image/png">PNG — lossless encoding</option></select></label><label>Quality <output id="qualityValue" for="quality">70%</output><input id="quality" type="range" min="10" max="100" value="70"><small id="qualityHint">Lower quality makes smaller files.</small></label><label>Maximum dimension<select id="maxSize"><option value="0">Keep original dimensions</option><option value="2560">2560 px</option><option value="1920" selected>1920 px — recommended</option><option value="1280">1280 px</option><option value="800">800 px</option></select></label></div></fieldset>
+    <div class="toolbar"><div><strong id="count">No images selected</strong><p id="summary">Add images to get started.</p></div><button id="clear" class="secondary" disabled>Clear all</button></div>
+    <ul id="list" class="file-list" aria-label="Selected images"></ul>
+    <div class="actions"><button id="compress" class="primary" disabled>Compress images <span aria-hidden="true">→</span></button><button id="zip" class="secondary" disabled>Download ZIP ↓</button></div>
+    <progress id="progress" value="0" max="100" hidden aria-label="Compression progress"></progress><p id="status" role="status" aria-live="polite">Ready when you are.</p>
+  </section>
+  <section class="notes"><article><span>01 / LOCAL</span><h3>Your images stay yours.</h3><p>Files are processed on your device. No server receives your images.</p></article><article><span>02 / FLEXIBLE</span><h3>A format for every need.</h3><p>Choose WebP, JPEG or PNG. Resize while keeping the original proportions.</p></article><article><span>03 / SIMPLE</span><h3>One file or the whole batch.</h3><p>Compare file sizes, then download individually or together in a ZIP.</p></article></section>
+  <p class="fine-print">* AVIF input depends on your browser. Animated images become a single still frame. TIFF is not supported. JPEG uses a white background; PNG and WebP preserve transparency. Output may be larger than the original.</p>
+</main>
+<footer><span>Built by <strong>Deb Gourab Biswas</strong></span><a href="https://github.com/debgourab/image_compressor.git" target="_blank" rel="noopener noreferrer">View source ↗</a></footer>
+<noscript>This image compressor needs JavaScript enabled in your browser.</noscript>
+</body>
+</html>
