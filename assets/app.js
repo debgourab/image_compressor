@@ -41,6 +41,20 @@
     ui.summary.textContent = items.length ? `${size(items.reduce((sum, item) => sum + item.file.size, 0))} original${ready.length ? ` · ${ready.length} ready · ${size(ready.reduce((sum, item) => sum + item.result.blob.size, 0))} output` : ''}` : 'Add images to get started.';
     controls();
   }
+  function addFiles(files) {
+    if (busy) return;
+    let added = 0; const errors = [];
+    for (const file of files) {
+      if (!/\.(jpe?g|png|webp|gif|bmp|avif)$/i.test(file.name) && !/^image\/(jpeg|png|webp|gif|bmp|avif)$/.test(file.type)) { errors.push(`${file.name}: unsupported format`); continue; }
+      if (!file.size || file.size > MAX_FILE) { errors.push(`${file.name}: empty or over 25 MB`); continue; }
+      if (items.some(item => item.file.name === file.name && item.file.size === file.size && item.file.lastModified === file.lastModified)) { errors.push(`${file.name}: already added`); continue; }
+      if (items.length >= 30 || items.reduce((sum, item) => sum + item.file.size, 0) + file.size > MAX_BATCH) { errors.push('Batch limit reached (30 files / 100 MB)'); break; }
+      items.push({ id: ++sequence, file, preview: URL.createObjectURL(file), result: null, error: '' }); added++;
+    }
+    ui.files.value = ''; render(); status(`${added} image(s) added.${errors.length ? ` ${errors.join('; ')}.` : ''}`);
+  }
+  ui.browse.addEventListener('click', () => ui.files.click());
+  ui.files.addEventListener('change', () => addFiles(ui.files.files));
   ui.clear.addEventListener('click', () => { items.forEach(release); items = []; ui.progress.hidden = true; render(); status('All images cleared.'); });
   render();
 })();
