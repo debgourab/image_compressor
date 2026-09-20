@@ -107,3 +107,51 @@ The app handles decode failures, null canvas outputs, unsupported encoders, inva
 | File limits and processing logic | `assets/app.js` |
 | ZIP filename | `link.download` in the ZIP click handler in `assets/app.js` |
 
+## Manual verification checklist
+
+- Add JPEG, transparent PNG, and WebP images; inspect previews.
+- Compress to each output format and verify downloaded extensions.
+- Confirm transparency survives PNG/WebP and becomes white in JPEG.
+- Resize a wide and a tall image; verify aspect ratios and maximum dimensions.
+- Try two different inputs with the same basename; verify both exist in the ZIP.
+- Try a corrupt `.png`; verify it reports an error while other files complete.
+- Try unsupported files and files above the limits; verify clear messages.
+- Change settings after compression; verify old results disappear.
+- Clear all files and add the same image again.
+- Test keyboard navigation and a narrow mobile viewport.
+- Disable network access after opening the extracted app; compression and ZIP creation should still work.
+
+## Push to GitHub
+
+For a **new, empty remote repository**, run these commands from the extracted project folder:
+
+```bash
+git init
+git add .
+git commit -m "feat: build browser image compressor with batch downloads"
+git branch -M main
+git remote add origin https://github.com/debgourab/image_compressor.git
+git push -u origin main
+```
+
+If the remote already has commits, clone it first and copy these project files into that checkout. Review `git status`, commit, and push from there. Do not force-push over existing work. The repository includes the project implementation and its commit history.
+
+## Deployment
+
+This is a static project. Upload `index.html` and `assets/` together to a static web host. No build command, server runtime, or environment variables are needed. Keep relative paths intact. The extracted app also works locally without hosting.
+
+## Troubleshooting
+
+**An image fails:** The file may be corrupt, too large, or unsupported by your browser. Try JPEG or PNG input and smaller dimensions.
+
+**The result is larger:** Lower quality, reduce dimensions, or choose WebP/JPEG where appropriate. PNG output does not use the quality slider.
+
+**ZIP download is unavailable:** Compress at least one image successfully. Verify `assets/vendor/jszip.min.js` is present. Individual downloads remain available if ZIP creation fails.
+
+**The download does not appear:** Check browser downloads and download permissions. “Download started” indicates the browser was asked to download; it does not confirm that the file was saved.
+
+## Credits
+
+Created by **Deb Gourab Biswas** from the supplied image-compressor concept and implementation.
+
+ZIP packaging uses [JSZip](https://github.com/Stuk/jszip), bundled at version **3.10.1**. Its MIT/GPLv3 licensing information is retained in `assets/vendor/JSZip-LICENSE.md` and its source header. No separate license for the original project code is declared here.
