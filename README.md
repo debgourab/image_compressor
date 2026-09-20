@@ -65,3 +65,45 @@ Changing settings clears previous results so downloaded files always correspond 
 
 Animated inputs are flattened to a single browser-rendered frame. Re-encoding does not preserve original EXIF metadata, animation, or color-profile metadata. This tool is intended for web images, not archival preservation.
 
+## Limits and compression expectations
+
+- Maximum **30 images**, **25 MiB per file**, and **100 MiB total input**. The interface uses the familiar MB label for these binary limits.
+- Images above **40 megapixels** are rejected after decoding. Decoding itself can still require significant memory; use smaller files on low-memory devices.
+- Processing runs sequentially to reduce peak memory use. ZIP generation still needs memory for the outputs and archive.
+- The default output is **WebP, 70% quality, maximum dimension 1920 px**.
+- Quality 70% is an encoder setting, not a promise of a 70% size reduction.
+- Already optimized images may become larger. The requested format is always honored; the tool does not silently return an original file instead.
+- ZIP uses STORE because image files are already encoded/compressed. Packaging them in ZIP is primarily for convenient downloads.
+- Results live in page memory only. Refreshing or closing the page clears them.
+
+## Project structure
+
+```text
+image_compressor/
+├── index.html                  # Semantic page and controls
+├── assets/
+│   ├── styles.css              # Responsive styling
+│   ├── app.js                  # Queue, canvas conversion, downloads
+│   └── vendor/
+│       ├── jszip.min.js        # Bundled JSZip 3.10.1
+│       └── JSZip-LICENSE.md    # Upstream third-party license
+├── .gitignore
+└── README.md
+```
+
+## How it works
+
+The browser decodes each selected file into an image. A Canvas draws it at its original size or a smaller proportional size. `canvas.toBlob()` encodes the selected format and quality. Object URLs power previews and individual downloads. JSZip packages successful results with unique filenames inside a `compressed_images` folder.
+
+The app handles decode failures, null canvas outputs, unsupported encoders, invalid files, and missing ZIP support. File names are inserted using `textContent`; generated download names are sanitized. Object URLs are released when results are replaced or removed.
+
+## Customize
+
+| Change | File / location |
+| --- | --- |
+| Headings, author, repository links | `index.html` |
+| Colors, spacing, responsive layout | `assets/styles.css` (`--blue` controls the accent) |
+| Initial quality, format, resize selection | Form controls in `index.html` |
+| File limits and processing logic | `assets/app.js` |
+| ZIP filename | `link.download` in the ZIP click handler in `assets/app.js` |
+
