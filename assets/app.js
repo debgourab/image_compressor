@@ -106,5 +106,19 @@
       status(`${items.length - failed} image(s) ready to download.${failed ? ` ${failed} failed; see details above.` : ''}`);
     } finally { busy = false; render(); }
   });
+  ui.zip.addEventListener('click', async () => {
+    if (busy || !items.some(item => item.result)) return;
+    busy = true; render();
+    try {
+      if (!window.JSZip) throw new Error('ZIP library is missing. Individual downloads are still available.');
+      const zip = new window.JSZip();
+      items.filter(item => item.result).forEach(item => zip.folder('compressed_images').file(item.result.name, item.result.blob));
+      const blob = await zip.generateAsync({ type: 'blob', compression: 'STORE' }, metadata => status(`Creating ZIP… ${Math.round(metadata.percent)}%`));
+      const url = URL.createObjectURL(blob), link = document.createElement('a'); link.href = url; link.download = 'compressed_images.zip';
+      document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000);
+      status('ZIP download started. Check your browser downloads.');
+    } catch (error) { status(error.message || 'Could not create ZIP. Try individual downloads.'); }
+    finally { busy = false; render(); }
+  });
   render();
 })();
