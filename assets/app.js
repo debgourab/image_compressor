@@ -55,6 +55,11 @@
   }
   ui.browse.addEventListener('click', () => ui.files.click());
   ui.files.addEventListener('change', () => addFiles(ui.files.files));
+  ['dragenter','dragover'].forEach(event => ui.dropzone.addEventListener(event, e => { e.preventDefault(); if (!busy) ui.dropzone.classList.add('dragover'); }));
+  ui.dropzone.addEventListener('dragleave', e => { if (!ui.dropzone.contains(e.relatedTarget)) ui.dropzone.classList.remove('dragover'); });
+  ui.dropzone.addEventListener('drop', e => { e.preventDefault(); ui.dropzone.classList.remove('dragover'); addFiles(e.dataTransfer.files); });
+  // Prevent dropped files outside the dropzone from navigating away from the app.
+  ['dragover','drop'].forEach(event => window.addEventListener(event, e => e.preventDefault()));
   ui.clear.addEventListener('click', () => { items.forEach(release); items = []; ui.progress.hidden = true; render(); status('All images cleared.'); });
   render();
 })();
