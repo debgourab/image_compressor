@@ -87,6 +87,10 @@
   // Prevent dropped files outside the dropzone from navigating away from the app.
   ['dragover','drop'].forEach(event => window.addEventListener(event, e => e.preventDefault()));
   ui.clear.addEventListener('click', () => { items.forEach(release); items = []; ui.progress.hidden = true; render(); status('All images cleared.'); });
+  ui.settings.addEventListener('input', () => {
+    items.forEach(item => { if (item.result) URL.revokeObjectURL(item.result.url); item.result = null; item.error = ''; });
+    ui.progress.hidden = true; render(); status('Settings updated. Compress to create new results.');
+  });
   ui.compress.addEventListener('click', async () => {
     if (busy || !items.length) return;
     busy = true; const options = { mime: ui.format.value, quality: Number(ui.quality.value) / 100, max: Number(ui.maxSize.value) };
